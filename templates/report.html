@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Download Report | Hybrid QCNN</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+</head>
+
+<body>
+
+    <!-- ===================== NAVBAR ===================== -->
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+
+        <div class="container">
+
+            <a class="navbar-brand fw-bold" href="/">
+                🧠 Hybrid QCNN
+            </a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+
+                <span class="navbar-toggler-icon"></span>
+
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarNav">
+
+                <ul class="navbar-nav ms-auto">
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Home</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="/dataset">Dataset</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="/charts">Charts</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="/model">Architecture</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/report">Report</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="/about">About</a>
+                    </li>
+
+                </ul>
+
+            </div>
+
+        </div>
+
+    </nav>
+
+    <!-- ===================== HEADER ===================== -->
+
+    <div class="container py-5">
+
+        <div class="text-center mb-5">
+
+            <h1 class="fw-bold text-primary">
+
+                📄 Prediction Report
+
+            </h1>
+
+            <p class="lead">
+
+                Generate and download a report of your brain tumor prediction.
+
+            </p>
+
+        </div>
+
+        <!-- ===================== REPORT CARD ===================== -->
+
+        <div class="card shadow-lg border-0 rounded-4">
+
+            <div class="card-body p-5">
+
+                <div class="row">
+
+                    <div class="col-md-4 text-center">
+
+                        <img src="{{ url_for('static', filename='images/report_placeholder.png') }}"
+                            class="img-fluid rounded shadow" style="max-height:280px;">
+
+                    </div>
+
+                    <div class="col-md-8">
+
+                        <h3 class="text-primary">
+
+                            Prediction Summary
+
+                        </h3>
+
+                        <hr>
+
+                        <table class="table table-bordered">
+
+                            <tr>
+
+                                <th>Model</th>
+
+                                <td>Hybrid QCNN</td>
+
+                            </tr>
+
+                            <tr>
+
+                                <th>Feature Extractor</th>
+
+                                <td>EfficientNet-B0</td>
+
+                            </tr>
+
+                            <tr>
+
+                                <th>Feature Reduction</th>
+
+                                <td>PCA (1280 → 16)</td>
+
+                            </tr>
+
+                            <tr>
+
+                                <th>Prediction</th>
+
+                                <td>Predicted Tumor Class</td>
+
+                            </tr>
+
+                            <tr>
+
+                                <th>Confidence</th>
+
+                                <td>Prediction Confidence</td>
+
+                            </tr>
+
+                            <tr>
+
+                                <th>Accuracy</th>
+
+                                <td>94.31%</td>
+
+                            </tr>
+
+                            <tr>
+
+                                <th>Date</th>
+
+                                <td id="currentDate"></td>
+
+                            </tr>
+
+                        </table>
+
+                        <div class="mt-4">
+
+                            <button class="btn btn-success btn-lg me-3" onclick="window.print()">
+
+                                <i class="bi bi-printer-fill"></i>
+
+                                Print Report
+
+                            </button>
+
+                            <a href="#" class="btn btn-danger btn-lg">
+
+                                <i class="bi bi-file-earmark-pdf-fill"></i>
+
+                                Download PDF
+
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- ===================== MODEL DETAILS ===================== -->
+
+        <div class="card shadow border-0 rounded-4 mt-5">
+
+            <div class="card-body">
+
+                <h3 class="text-primary">
+
+                    Model Information
+
+                </h3>
+
+                <hr>
+
+                <div class="row">
+
+                    <div class="col-md-6">
+
+                        <ul class="list-group">
+
+                            <li class="list-group-item">
+                                EfficientNet-B0 Feature Extraction
+                            </li>
+
+                            <li class="list-group-item">
+                                StandardScaler
+                            </li>
+
+                            <li class="list-group-item">
+                                Principal Component Analysis
+                            </li>
+
+                            <li class="list-group-item">
+                                Quantum Feature Encoding
+                            </li>
+
+                        </ul>
+
+                    </div>
+
+                    <div class="col-md-6">
+
+                        <ul class="list-group">
+
+                            <li class="list-group-item">
+                                Hybrid QCNN
+                            </li>
+
+                            <li class="list-group-item">
+                                Softmax Classification
+                            </li>
+
+                            <li class="list-group-item">
+                                Four-Class Classification
+                            </li>
+
+                            <li class="list-group-item">
+                                MRI Image Analysis
+                            </li>
+
+                        </ul>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <footer class="footer mt-5">
+
+        <div>
+
+            🧠 Hybrid QCNN Brain Tumor Detection
+
+        </div>
+
+        <div>
+
+            © 2026 All Rights Reserved
+
+        </div>
+
+        <div>
+
+            Developed by <strong>Manish Negi</strong>
+
+        </div>
+
+    </footer>
+
+    <script>
+
+        document.getElementById("currentDate").innerHTML =
+            new Date().toLocaleDateString();
+
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+
+</html>
