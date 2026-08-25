@@ -2,14 +2,21 @@ import torch
 import torch.nn as nn
 import pennylane as qml
 
+# Keep CPU usage controlled on a small Render instance
+torch.set_num_threads(1)
+
 # =====================================
 # Quantum Configuration
 # =====================================
 
 NUM_QUBITS = 8
-NUM_LAYERS = 4 
+NUM_LAYERS = 4
 
-dev = qml.device("default.qubit", wires=NUM_QUBITS)
+# CPU-optimized PennyLane simulator
+dev = qml.device(
+    "lightning.qubit",
+    wires=NUM_QUBITS
+)
 
 # =====================================
 # Quantum Circuit
@@ -18,7 +25,7 @@ dev = qml.device("default.qubit", wires=NUM_QUBITS)
 @qml.qnode(
     dev,
     interface="torch",
-    diff_method="backprop"
+    diff_method="adjoint"
 )
 def quantum_circuit(inputs, weights):
 
@@ -30,12 +37,21 @@ def quantum_circuit(inputs, weights):
     for l in range(NUM_LAYERS):
 
         for i in range(NUM_QUBITS):
-            qml.RY(weights[l, i, 0], wires=i)
-            qml.RZ(weights[l, i, 1], wires=i)
+            qml.RY(
+                weights[l, i, 0],
+                wires=i
+            )
+
+            qml.RZ(
+                weights[l, i, 1],
+                wires=i
+            )
 
         # Ring Entanglement
         for i in range(NUM_QUBITS):
-            qml.CNOT(wires=[i, (i + 1) % NUM_QUBITS])
+            qml.CNOT(
+                wires=[i, (i + 1) % NUM_QUBITS]
+            )
 
     return [
         qml.expval(qml.PauliZ(i))
@@ -48,7 +64,11 @@ def quantum_circuit(inputs, weights):
 # =====================================
 
 weight_shapes = {
-    "weights": (NUM_LAYERS, NUM_QUBITS, 2)
+    "weights": (
+        NUM_LAYERS,
+        NUM_QUBITS,
+        2
+    )
 }
 
 quantum_layer = qml.qnn.TorchLayer(
@@ -87,7 +107,9 @@ class HybridQCNN(nn.Module):
         outputs = []
 
         for sample in x:
-            outputs.append(self.quantum(sample))
+            outputs.append(
+                self.quantum(sample)
+            )
 
         x = torch.stack(outputs)
 
