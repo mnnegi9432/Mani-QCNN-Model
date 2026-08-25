@@ -4,12 +4,14 @@ from torchvision import transforms
 
 from model_loader import load_models
 
+
 CLASS_NAMES = [
     "glioma",
     "meningioma",
     "notumor",
     "pituitary"
 ]
+
 
 transform = transforms.Compose([
     transforms.Resize((224, 224)),
@@ -23,36 +25,45 @@ transform = transforms.Compose([
 
 def predict_image(image_path):
 
-    # Load models only when prediction is requested
     efficientnet, hybrid_model, scaler, pca, device = load_models()
+
+    efficientnet.eval()
+    hybrid_model.eval()
 
     image = Image.open(image_path).convert("RGB")
 
     image = transform(image).unsqueeze(0).to(device)
 
-    # EfficientNet Feature Extraction
-    with torch.no_grad():
+    # EfficientNet
+    with torch.inference_mode():
+
         features = efficientnet(image)
 
-    features = features.cpu().numpy()
+        features = features.cpu().numpy()
 
-    # Standardization
+    # StandardScaler
     features = scaler.transform(features)
 
-    # PCA Reduction
+    # PCA
     features = pca.transform(features)
 
-    features = torch.tensor(
-        features,
+    # Convert back to PyTorch
+    features = torch.from_numpy(
+        features
+    ).to(
+        device=device,
         dtype=torch.float32
-    ).to(device)
+    )
 
-    # Hybrid QCNN Prediction
-    with torch.no_grad():
+    # Hybrid QCNN
+    with torch.inference_mode():
 
         output = hybrid_model(features)
 
-        probabilities = torch.softmax(output, dim=1)
+        probabilities = torch.softmax(
+            output,
+            dim=1
+        )
 
         confidence, prediction = torch.max(
             probabilities,
@@ -61,5 +72,8 @@ def predict_image(image_path):
 
     return (
         CLASS_NAMES[prediction.item()],
-        round(confidence.item() * 100, 2)
+        round(
+            confidence.item() * 100,
+            2
+        )
     )
